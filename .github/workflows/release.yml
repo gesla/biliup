@@ -76,6 +76,7 @@ jobs:
           echo "CXX_aarch64_linux_android=$TOOLCHAIN/aarch64-linux-android24-clang++" >> $GITHUB_ENV
           echo "AR_aarch64_linux_android=$TOOLCHAIN/llvm-ar" >> $GITHUB_ENV
           echo "LIBCLANG_PATH=${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/lib" >> $GITHUB_ENV
+          sed -i 's|reqwest = { version = "0.13.4", features = \["cookies", "form", "query"\] }|reqwest = { version = "0.13.4", default-features = false, features = ["cookies", "form", "query", "native-tls-vendored"] }|' Cargo.toml
       
       - name: Build release binary
         uses: actions-rs/cargo@v1
