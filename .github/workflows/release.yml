@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false # don't fail other jobs if one fails
       matrix:
-        build: [x86_64-linux, x86_64-linux-musl, aarch64-linux, arm-linux, x86_64-macos, x86_64-windows, aarch64-macos] #, x86_64-win-gnu, win32-msvc
+        build: [x86_64-linux, x86_64-linux-musl, aarch64-linux, arm-linux, x86_64-macos, x86_64-windows, aarch64-macos, aarch64-android] #, x86_64-win-gnu, win32-msvc
         include:
           - build: x86_64-linux
             os: ubuntu-22.04
@@ -61,6 +61,11 @@ jobs:
             rust: stable
             target: aarch64-apple-darwin
             cross: false
+          - build: aarch64-android
+            os: ubuntu-latest
+            rust: stable
+            target: aarch64-linux-android
+            cross: true
         # - build: x86_64-win-gnu
         #   os: windows-2019
         #   rust: stable-x86_64-gnu
@@ -96,7 +101,7 @@ jobs:
           tool: cross
 
       - name: Run cargo test
-        if: matrix.build != 'aarch64-macos'
+        if: matrix.build != 'aarch64-macos' && matrix.build != 'aarch64-android'
         shell: bash
         run: ${{ matrix.cross && 'cross' || 'cargo' }} test --release --locked --target ${{ matrix.target }} -p biliup
 
